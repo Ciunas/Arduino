@@ -1,9 +1,10 @@
 #include "Arduino.h"
 #include "TrackDriver.h"
 #include "InitialiseIO.h"
+
 #define FORWARD 0
-#define TURNLEFT 1
-#define TURNRIGHT 2
+#define LEFT 	1
+#define RIGHT 	2
 
 //The setup function is called once at startup of the sketch
 void setup() {
@@ -21,7 +22,8 @@ void loop() {
 
 
 
-	int temp = movePattern( 5 );
+	int temp = movePattern( FORWARD );
 	Serial.println(temp);
+	delay(10000);
 
 }
