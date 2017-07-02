@@ -21,6 +21,8 @@ int movePattern(int state) {
 	int rightBack = 3;
 	int leftFront = 4;
 	int leftBack = 5;
+	int state1 = 0;
+	const int encoderInput = 6;
 	digitalWrite(13, 0);
 //	digitalWrite(2, LOW); // turn the LED on (HIGH is the voltage level)
 //	digitalWrite(3, HIGH); // turn the LED on (HIGH is the voltage level)
@@ -35,22 +37,33 @@ int movePattern(int state) {
 		digitalWrite(rightFront, LOW); // turn on the tracks
 		digitalWrite(rightBack, HIGH);
 
-		while ( numSlits < 50 ) {
-			detectState1 = digitalRead(6);
 
-			if (detectState1 == 1) { //If encoder output is high
-				Serial.println(numSlits);
-				detectState2 = digitalRead(6);
+		switch (state1) {
 
-				if (detectState2 == 0) {
-					//Serial.println(numSlits);
-					digitalWrite(13, 1); //Turn on the status LED
-					numSlits++;
-					detectState1 = 0;
-					detectState2 = 0;
+		case 0:
+
+			if ((detectState1 = digitalRead(encoderInput)) == HIGH) {
+
+				while (detectState1 == HIGH) {
+
+					if ((detectState2 = digitalRead(encoderInput)) == LOW) {
+
+						detectState1 = LOW;
+						detectState2 = HIGH;
+						state1 = 1;
+					}
 				}
-			}
 
+			}
+			break;
+
+		case 1:
+			++numSlits;
+			if(numSlits == 11){
+				Serial.println(numSlits);
+			}
+			state1 = 0;
+			break;
 		}
 		state = STOP;
 		break;
