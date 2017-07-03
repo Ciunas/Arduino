@@ -37,34 +37,8 @@ int movePattern(int state) {
 		digitalWrite(rightFront, LOW); // turn on the tracks
 		digitalWrite(rightBack, HIGH);
 
+		photoEncoder( 6 );
 
-		switch (state1) {
-
-		case 0:
-
-			if ((detectState1 = digitalRead(encoderInput)) == HIGH) {
-
-				while (detectState1 == HIGH) {
-
-					if ((detectState2 = digitalRead(encoderInput)) == LOW) {
-
-						detectState1 = LOW;
-						detectState2 = HIGH;
-						state1 = 1;
-					}
-				}
-
-			}
-			break;
-
-		case 1:
-			++numSlits;
-			if(numSlits == 11){
-				Serial.println(numSlits);
-			}
-			state1 = 0;
-			break;
-		}
 		state = STOP;
 		break;
 
@@ -93,5 +67,46 @@ int movePattern(int state) {
 	}
 
 	return numSlits;
+}
+
+
+//Counts revolutions of wheels using photoencoder
+void photoEncoder(int encoderInput){
+
+	int detectState1 = HIGH; // Variable for reading the encoder status
+	int detectState2 = LOW; // Variable for reading the encoder status
+	int state = 0;
+	int numSlits = 0;
+
+	switch (state) {
+
+	case 0:
+
+		if ((detectState1 = digitalRead(encoderInput)) == LOW) {
+			state = 1;
+		}
+		break;
+
+	case 1:
+
+		if ((detectState2 = digitalRead(encoderInput)) == HIGH) {
+			detectState1 = HIGH;
+			detectState2 = LOW;
+			state = 2;
+		}
+
+		break;
+
+	case 2:
+		if (++numSlits == 22) {
+			Serial.println(numSlits);
+			numSlits = 0;
+		}
+		state = 0;
+		break;
+
+	default:
+		break;
+	}
 }
 

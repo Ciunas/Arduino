@@ -9,7 +9,6 @@
 #define TRACKDRIVER_H_
 
 int movePattern( int );
-
-
+void photoEncoder( int );
 
 #endif /* TRACKDRIVER_H_ */
